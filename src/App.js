@@ -98,10 +98,8 @@ const bottomAnimal = animalData[bottomIndex] || {};
       return newBottomIndex;
     });
     setAnimalCount((prevCount) => prevCount + 1);
-    const updatedAnimalData = [...animalData];
-    updatedAnimalData[topIndex].result += 1;
-    setAnimalData(updatedAnimalData);
-  }
+    animalData[topIndex].result += 1;
+  };
   
   const voteBottom = () => {
     setTopIndex((prevTopIndex) => {
@@ -110,13 +108,12 @@ const bottomAnimal = animalData[bottomIndex] || {};
         newTopIndex = (newTopIndex + 1) % animalData.length;
       }
       return newTopIndex;
-      });
-      setAnimalCount((prevCount) => prevCount + 1);
-      const updatedAnimalData = [...animalData];
-      updatedAnimalData[bottomIndex].result += 1;
-      setAnimalData(updatedAnimalData);
-    };
-
+    });
+    setAnimalCount((prevCount) => prevCount + 1);
+    window.alert(`${animalData[bottomIndex].name} wins!!!`);
+    animalData[bottomIndex].result += 1;
+  };
+  
   /*const voteBottom = () => {
     setTopIndex((prevTopIndex) => {
       let newTopIndex = (prevTopIndex + 1) % animalData.length;
