@@ -62,6 +62,10 @@ html, body {
     #img {
         height: 38vh;
     }
+
+    #time-limit {
+        font-size: 1rem;
+    }
 }
 
 
