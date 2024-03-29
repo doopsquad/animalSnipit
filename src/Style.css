@@ -8,6 +8,7 @@ html, body {
     overflow: hidden;
   }
 
+/* App Page */
 .profile {
     display: flex;
     flex-flow: wrap;
@@ -51,8 +52,45 @@ html, body {
     visibility: hidden;
 }
 
+#time-limit {
+    color: white;
+    text-align: center;
+    font-weight: bold;
+}
+
 @media only screen and (max-width: 480px) {
     #img {
         height: 40vh;
     }
+}
+
+
+/* Home Page */
+.home-page {
+    text-align: center;
+    color: white;
+    margin-top: 40vh;
+}
+
+#home-title {
+    font-size: 10vh;
+}
+
+#home-btn {
+    padding: 0.5rem 1.5rem;
+    font-weight: bold;
+    border-radius: 0.3125rem;
+    font-size: 2rem;
+}
+
+/* Collection Page */
+
+#collec-title {
+    text-align: center;
+    color: white;
+    font-size: 3rem;
+}
+
+.bestiary-grid {
+    
 }

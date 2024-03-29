@@ -1,6 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
+import Home from './Home';
+import Collection from './Collection';
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
@@ -24,10 +30,27 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
 
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home/>
+  },
+  {
+    path: "/app",
+    element: <App/>
+  },
+  {
+    path: "/collection",
+    element: <Collection/>
+  }
+]);
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    {/*<App />*/}
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 
