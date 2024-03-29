@@ -148,5 +148,5 @@ const bottomAnimal = animalData[bottomIndex] || {};
     </div>
   );
 }
-}
+
 export default App;
