@@ -73,12 +73,12 @@ function App() {
   ];
 
   const voteTop = () => {
-    setTopIndex((prevTopIndex) => {
-      let newTopIndex = (prevTopIndex + 1) % animalData.length;
-      while (newTopIndex === bottomIndex) {
-        newTopIndex = (newTopIndex + 1) % animalData.length;
+    setBottomIndex((prevBottomIndex) => {
+      let newBottomIndex = (prevBottomIndex + 1) % animalData.length;
+      while (newBottomIndex === topIndex) {
+        newBottomIndex = (newBottomIndex + 1) % animalData.length;
       }
-      return newTopIndex;
+      return newBottomIndex;
     });
     setAnimalCount((prevCount) => prevCount + 1);
     window.alert(`${animalData[topIndex].name} wins!!!`);
@@ -86,12 +86,12 @@ function App() {
   };
   
   const voteBottom = () => {
-    setBottomIndex((prevBottomIndex) => {
-      let newBottomIndex = (prevBottomIndex + 1) % animalData.length;
-      while (newBottomIndex === topIndex) {
-        newBottomIndex = (newBottomIndex + 1) % animalData.length;
+    setTopIndex((prevTopIndex) => {
+      let newTopIndex = (prevTopIndex + 1) % animalData.length;
+      while (newTopIndex === bottomIndex) {
+        newTopIndex = (newTopIndex + 1) % animalData.length;
       }
-      return newBottomIndex;
+      return newTopIndex;
     });
     setAnimalCount((prevCount) => prevCount + 1);
     window.alert(`${animalData[bottomIndex].name} wins!!!`);

@@ -91,6 +91,22 @@ html, body {
     font-size: 3rem;
 }
 
-.bestiary-grid {
-    
+#animal-name {
+    color: white;
 }
+
+#animal-pic {
+    height: 85%;
+    width: 30%;
+}
+
+.placeholder {
+ 
+    text-align: center;
+    height: 30vh;
+}
+
+/*.bestiary-grid {
+    display: grid;
+    width: 20%;
+} */
