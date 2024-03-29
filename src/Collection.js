@@ -3,7 +3,7 @@ import "./Style.css";
 import { useLocation } from 'react-router-dom';
 
 
-function Collection(props) {
+function Collection() {
     const location = useLocation();
     const animalData = location.state?.animalData || [];
 

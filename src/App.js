@@ -30,7 +30,7 @@ function App() {
   const [topIndex, setTopIndex] = useState(0);
   const [bottomIndex, setBottomIndex] = useState(1);
   const [animalCount, setAnimalCount] = useState(0);
-  const [timeRemaining, setTimeRemaining] = useState(30);
+  const [timeRemaining, setTimeRemaining] = useState(15);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -72,7 +72,11 @@ function App() {
     },
   ];
 
-  const voteTop = () => {
+  const topAnimal = animalData[topIndex] || {};
+const bottomAnimal = animalData[bottomIndex] || {};
+
+
+ /* const voteTop = () => {
     setBottomIndex((prevBottomIndex) => {
       let newBottomIndex = (prevBottomIndex + 1) % animalData.length;
       while (newBottomIndex === topIndex) {
@@ -83,9 +87,37 @@ function App() {
     setAnimalCount((prevCount) => prevCount + 1);
     window.alert(`${animalData[topIndex].name} wins!!!`);
     animalData[topIndex].result += 1;
-  };
+  }; */
+
+  const voteTop = () => {
+    setBottomIndex((prevBottomIndex) => {
+      let newBottomIndex = (prevBottomIndex + 1) % animalData.length;
+      while (newBottomIndex === topIndex) {
+        newBottomIndex = (newBottomIndex + 1) % animalData.length;
+      }
+      return newBottomIndex;
+    });
+    setAnimalCount((prevCount) => prevCount + 1);
+    const updatedAnimalData = [...animalData];
+    updatedAnimalData[topIndex].result += 1;
+    setAnimalData(updatedAnimalData);
+  }
   
   const voteBottom = () => {
+    setTopIndex((prevTopIndex) => {
+      let newTopIndex = (prevTopIndex + 1) % animalData.length;
+      while (newTopIndex === bottomIndex) {
+        newTopIndex = (newTopIndex + 1) % animalData.length;
+      }
+      return newTopIndex;
+      });
+      setAnimalCount((prevCount) => prevCount + 1);
+      const updatedAnimalData = [...animalData];
+      updatedAnimalData[bottomIndex].result += 1;
+      setAnimalData(updatedAnimalData);
+    };
+
+  /*const voteBottom = () => {
     setTopIndex((prevTopIndex) => {
       let newTopIndex = (prevTopIndex + 1) % animalData.length;
       while (newTopIndex === bottomIndex) {
@@ -96,24 +128,25 @@ function App() {
     setAnimalCount((prevCount) => prevCount + 1);
     window.alert(`${animalData[bottomIndex].name} wins!!!`);
     animalData[bottomIndex].result += 1;
-  };
+  };*/
 
 
   return (
     <div className="App">
-      <AnimalProfile img={animalData[topIndex].img} name={animalData[topIndex].name}/>
-      <AnimalProfile img={animalData[bottomIndex].img} name={animalData[bottomIndex].name}/>
+      <AnimalProfile img={topAnimal.img} name={topAnimal.name} />
+      <AnimalProfile img={bottomAnimal.img} name={bottomAnimal.name} /> 
       <h1 id="animalCounter">{animalCount}</h1>
       <div id="buttonHolder">
         <button id="btnLeft" className="button" onClick={voteTop}>
-          Vote Top
+          Change Bottom
         </button>
         <button id="btnRight" className="button" onClick={voteBottom}>
-          Vote Bottom
+          Change Top
         </button>
       </div>
       <h1 id="time-limit">Time Remaining: {timeRemaining}</h1>
     </div>
   );
+}
 }
 export default App;
