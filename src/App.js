@@ -72,22 +72,9 @@ function App() {
     },
   ];
 
-  const topAnimal = animalData[topIndex] || {};
+const topAnimal = animalData[topIndex] || {};
 const bottomAnimal = animalData[bottomIndex] || {};
 
-
- /* const voteTop = () => {
-    setBottomIndex((prevBottomIndex) => {
-      let newBottomIndex = (prevBottomIndex + 1) % animalData.length;
-      while (newBottomIndex === topIndex) {
-        newBottomIndex = (newBottomIndex + 1) % animalData.length;
-      }
-      return newBottomIndex;
-    });
-    setAnimalCount((prevCount) => prevCount + 1);
-    window.alert(`${animalData[topIndex].name} wins!!!`);
-    animalData[topIndex].result += 1;
-  }; */
 
   const voteTop = () => {
     setBottomIndex((prevBottomIndex) => {
@@ -110,23 +97,8 @@ const bottomAnimal = animalData[bottomIndex] || {};
       return newTopIndex;
     });
     setAnimalCount((prevCount) => prevCount + 1);
-    window.alert(`${animalData[bottomIndex].name} wins!!!`);
     animalData[bottomIndex].result += 1;
   };
-  
-  /*const voteBottom = () => {
-    setTopIndex((prevTopIndex) => {
-      let newTopIndex = (prevTopIndex + 1) % animalData.length;
-      while (newTopIndex === bottomIndex) {
-        newTopIndex = (newTopIndex + 1) % animalData.length;
-      }
-      return newTopIndex;
-    });
-    setAnimalCount((prevCount) => prevCount + 1);
-    window.alert(`${animalData[bottomIndex].name} wins!!!`);
-    animalData[bottomIndex].result += 1;
-  };*/
-
 
   return (
     <div className="App">
