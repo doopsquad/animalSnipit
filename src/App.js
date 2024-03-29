@@ -106,10 +106,10 @@ function App() {
       <h1 id="animalCounter">{animalCount}</h1>
       <div id="buttonHolder">
         <button id="btnLeft" className="button" onClick={voteTop}>
-          Change Top
+          Vote Top
         </button>
         <button id="btnRight" className="button" onClick={voteBottom}>
-          Change Bottom
+          Vote Bottom
         </button>
       </div>
       <h1 id="time-limit">Time Remaining: {timeRemaining}</h1>
