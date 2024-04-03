@@ -24,30 +24,14 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-
+const TIME_REMAINING = 3;
 function App() {
 
   const [topIndex, setTopIndex] = useState(0);
   const [bottomIndex, setBottomIndex] = useState(1);
   const [animalCount, setAnimalCount] = useState(0);
-  const [timeRemaining, setTimeRemaining] = useState(15);
+  const [timeRemaining, setTimeRemaining] = useState(TIME_REMAINING);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    let timer;
-
-    if (timeRemaining > 0) {
-      timer = setInterval(() => {
-        setTimeRemaining((prevTime) => prevTime - 1);
-      }, 1000);
-    } else {
-      // Navigate to a different page or route when the timer reaches 0
-      navigate('/collection', { state: { animalData } });
-    }
-
-    // Clean up the interval when the component unmounts or when timeRemaining reaches 0
-    return () => clearInterval(timer);
-  }, [timeRemaining, navigate]);
 
   const animalData = [
     {
@@ -72,9 +56,24 @@ function App() {
     },
   ];
 
-const topAnimal = animalData[topIndex] || {};
-const bottomAnimal = animalData[bottomIndex] || {};
-
+  useEffect(() => {
+    let timer;
+  
+    if (timeRemaining > 0) {
+      timer = setInterval(() => {
+        setTimeRemaining(prevTime => prevTime - 1);
+      }, 1000);
+    } else {
+      // Navigate to the '/collection' route and pass the animalData as state
+      navigate('/collection', { state: { animalData } });
+    }
+  
+    // Clean up the interval when the component unmounts or when timeRemaining reaches 0
+    return () => clearInterval(timer);
+  }, [timeRemaining, navigate, animalData]);
+  
+  const topAnimal = animalData[topIndex] || {};
+  const bottomAnimal = animalData[bottomIndex] || {};
 
   const voteTop = () => {
     setBottomIndex((prevBottomIndex) => {

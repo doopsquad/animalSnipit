@@ -1,29 +1,41 @@
-import React from 'react'
+import React from 'react';
 import "./Style.css";
-import { useLocation } from 'react-router-dom';
-
+import { useLocation, Link } from 'react-router-dom';
 
 function Collection() {
-    const location = useLocation();
-    const animalData = location.state?.animalData || [];
+  const location = useLocation();
+  const animalData = location.state?.animalData || [];
 
-    let favorite;
+  let favorite = {};
 
-    for (let x = 0; x < animalData.length; x++) {
-        if (x == 0 || animalData[x].result > animalData[x - 1].result) {
-            favorite = animalData[x];
-        }
+  for (let x = 0; x < animalData.length; x++) {
+    const currentAnimal = animalData[x];
+    const prevAnimal = animalData[x - 1];
+    console.log(animalData[x].result);
+    if (x === 0 || (currentAnimal.result >= (prevAnimal?.result || 0))) {
+      favorite = currentAnimal;
     }
+  }
 
   return (
     <div>
       <h1 id="collec-title">Your Bestiary 🦁</h1>
-      <div className='placeholder'>
-        <h1 id="animal-name">{favorite.name}</h1>
-        <img id="animal-pic" src={favorite.img}></img>
-      </div>
+
+      {/* Check if favorite is not an empty object */}
+      {Object.keys(favorite).length > 0 ? (
+        <div className='placeholder'>
+          <h1 id="animal-name">{favorite != null && favorite.name}</h1>
+          <img id="animal-pic" src={favorite.img}/>
+        </div>
+      ) : (
+        <p>No animals found.</p>
+      )}
+
+      <Link to="/">
+        <button id="collec-home">Go Back Home</button>
+      </Link>
     </div>
-  )
+  );
 }
 
-export default Collection
+export default Collection;
