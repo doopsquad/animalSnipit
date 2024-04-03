@@ -64,7 +64,7 @@ html, body {
     }
 
     #time-limit {
-        font-size: 1rem;
+        font-size: 2rem;
     }
 }
 
@@ -73,7 +73,7 @@ html, body {
 .home-page {
     text-align: center;
     color: white;
-    margin-top: 40vh;
+    margin-top: 40vh; 
 }
 
 #home-title {
