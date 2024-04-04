@@ -5,17 +5,24 @@ import { useLocation, Link } from 'react-router-dom';
 function Collection() {
   const location = useLocation();
   const animalData = location.state?.animalData || [];
-
-  let favorite = {};
+  let favorite = null;
+  let maxResult = -Infinity; // Initialize with a very small value
 
   for (let x = 0; x < animalData.length; x++) {
     const currentAnimal = animalData[x];
-    const prevAnimal = animalData[x - 1];
-    console.log(animalData[x].result);
-    if (x === 0 || (currentAnimal.result >= (prevAnimal?.result || 0))) {
+
+    if (currentAnimal.result > maxResult) {
       favorite = currentAnimal;
+      maxResult = currentAnimal.result;
     }
   }
+
+  le
+  for (let x = 0; x < animalData.length; x++) {
+    const currentAnimal = animalData[x];
+  }
+
+
 
   return (
     <div>

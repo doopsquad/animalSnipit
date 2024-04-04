@@ -24,7 +24,30 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-const TIME_REMAINING = 3;
+const TIME_REMAINING = 15;
+
+const animalData = [
+  {
+    name: "basking shark",
+    img: "https://th.bing.com/th/id/R.db6acb92804f7d7e0a645ca7d3dddbc2?rik=zOVzXpWAq6HNHg&riu=http%3a%2f%2fanimalsadda.com%2fwp-content%2fuploads%2f2013%2f11%2fBasking-Shark-3.jpg&ehk=UJTo17LUZLuEINcA23wi7Qrfn%2bEv%2bDC9NpghytAD33U%3d&risl=&pid=ImgRaw&r=0",
+    result: 0
+  },
+  {
+    name: "whale shark",
+    img: "https://www.thoughtco.com/thmb/o3_yk19FVHEzfbNlIroah5ZqZjs=/4632x3088/filters:no_upscale():max_bytes(150000):strip_icc()/whale-shark-514475851-e56169bf49fb41a49f3b30068f806789.jpg",
+    result: 0
+  },
+  {
+    name: "rhino",
+    img: "https://th.bing.com/th/id/OIP.Kw6EzySU7iAc6sue1y0DKgHaEK?rs=1&pid=ImgDetMain",
+    result: 0
+  },
+  {
+    name: "asian elephant",
+    img: "https://www.thoughtco.com/thmb/q4t3OQkJIwiyTHnV4Pve34f4Ygo%3D/2250x1500/filters:fill(auto%2C1)/167003501-56a0089e5f9b58eba4ae8f93.jpg",
+    result: 0
+  },
+];
 function App() {
 
   const [topIndex, setTopIndex] = useState(0);
@@ -33,44 +56,19 @@ function App() {
   const [timeRemaining, setTimeRemaining] = useState(TIME_REMAINING);
   const navigate = useNavigate();
 
-  const animalData = [
-    {
-      name: "basking shark",
-      img: "https://th.bing.com/th/id/R.db6acb92804f7d7e0a645ca7d3dddbc2?rik=zOVzXpWAq6HNHg&riu=http%3a%2f%2fanimalsadda.com%2fwp-content%2fuploads%2f2013%2f11%2fBasking-Shark-3.jpg&ehk=UJTo17LUZLuEINcA23wi7Qrfn%2bEv%2bDC9NpghytAD33U%3d&risl=&pid=ImgRaw&r=0",
-      result: 0
-    },
-    {
-      name: "whale shark",
-      img: "https://www.thoughtco.com/thmb/o3_yk19FVHEzfbNlIroah5ZqZjs=/4632x3088/filters:no_upscale():max_bytes(150000):strip_icc()/whale-shark-514475851-e56169bf49fb41a49f3b30068f806789.jpg",
-      result: 0
-    },
-    {
-      name: "rhino",
-      img: "https://th.bing.com/th/id/OIP.Kw6EzySU7iAc6sue1y0DKgHaEK?rs=1&pid=ImgDetMain",
-      result: 0
-    },
-    {
-      name: "asian elephant",
-      img: "https://www.thoughtco.com/thmb/q4t3OQkJIwiyTHnV4Pve34f4Ygo%3D/2250x1500/filters:fill(auto%2C1)/167003501-56a0089e5f9b58eba4ae8f93.jpg",
-      result: 0
-    },
-  ];
+ useEffect(() => {
+  let timer;
 
-  useEffect(() => {
-    let timer;
-  
-    if (timeRemaining > 0) {
-      timer = setInterval(() => {
-        setTimeRemaining(prevTime => prevTime - 1);
-      }, 1000);
-    } else {
-      // Navigate to the '/collection' route and pass the animalData as state
-      navigate('/collection', { state: { animalData } });
-    }
-  
-    // Clean up the interval when the component unmounts or when timeRemaining reaches 0
-    return () => clearInterval(timer);
-  }, [timeRemaining, navigate, animalData]);
+  if (timeRemaining > 0) {
+    timer = setInterval(() => {
+      setTimeRemaining(prevTime => prevTime - 1);
+    }, 1000);
+  } else {
+    navigate('/collection', { state: { animalData } });
+  }
+
+  return () => clearInterval(timer);
+}, [timeRemaining, navigate]);
   
   const topAnimal = animalData[topIndex] || {};
   const bottomAnimal = animalData[bottomIndex] || {};
@@ -83,8 +81,10 @@ function App() {
       }
       return newBottomIndex;
     });
-    setAnimalCount((prevCount) => prevCount + 1);
-    animalData[topIndex].result += 1;
+   // setAnimalCount((prevCount) => prevCount + 1);
+   console.log(animalData[topIndex]);
+    animalData[topIndex].result++;
+    console.log(animalData[topIndex]);
   };
   
   const voteBottom = () => {
@@ -95,8 +95,9 @@ function App() {
       }
       return newTopIndex;
     });
-    setAnimalCount((prevCount) => prevCount + 1);
-    animalData[bottomIndex].result += 1;
+    //setAnimalCount((prevCount) => prevCount + 1);
+    animalData[bottomIndex].result++;
+    console.log(animalData[bottomIndex].result);
   };
 
   return (
