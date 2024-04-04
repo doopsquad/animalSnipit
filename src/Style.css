@@ -91,6 +91,12 @@ html, body {
     background-color: white;
 }
 
+.home-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 /* Collection Page */
 
 #collec-title {
@@ -122,6 +128,9 @@ html, body {
         margin-bottom: 5vh;
         color: black;
         background-color: white;
+        position: relative;
+        top: 5vh;
+        left: 65vh;
 }
 
 /*.bestiary-grid {

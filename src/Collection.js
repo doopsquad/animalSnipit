@@ -17,10 +17,14 @@ function Collection() {
     }
   }
 
-  le
+/*  let favorite = animalData[0];
   for (let x = 0; x < animalData.length; x++) {
     const currentAnimal = animalData[x];
-  }
+
+    if (currentAnimal.result > favorite.result) {
+      favorite = currentAnimal;
+    }
+  }*/
 
 
 
