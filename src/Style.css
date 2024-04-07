@@ -5,7 +5,10 @@ html, body {
     padding: 0;
     font-size: 16px;
     background-color: #794949;
-    overflow: hidden;
+  }
+
+  a {
+    text-decoration: none;
   }
 
 /* App Page */
@@ -19,6 +22,34 @@ html, body {
     overflow: hidden; /* Hide overflow content */
     max-height: calc(100vh - 6rem);
 }
+
+@keyframes bulge {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes flash {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  .animal-profile.bulge {
+    animation: bulge 0.5s ease-in-out infinite, flash 0.5s ease-in-out infinite;
+  }
 
 #img {
     width: 100%;
@@ -99,6 +130,16 @@ html, body {
 
 /* Collection Page */
 
+@media only screen and (max-width: 480px) {
+    #collec-home {
+        margin: 0;
+    }
+}
+
+.collec {
+    height: fit-content;
+}
+
 #collec-title {
     text-align: center;
     color: white;
@@ -116,24 +157,19 @@ html, body {
 
 .placeholder {
     text-align: center;
-    height: 30vh;
 }
 
 #collec-home {
-        padding: 0.5rem 1.5rem;
-        font-weight: bold;
-        border-radius: 0.3125rem;
-        font-size: 2rem;
-        box-shadow: 0.5rem 0.5rem;
-        margin-bottom: 5vh;
-        color: black;
-        background-color: white;
-        position: relative;
-        top: 5vh;
-        left: 65vh;
+    display: block;
+    z-index: 100;
+    margin: 0 auto;
+    position: relative;
+    margin-bottom: 5vh;
+    padding: 0.5rem 1.5rem;
+    color: black;
+    background-color: white;
+    font-weight: bold;
+    font-size: 2rem;
+    border-radius: 0.3125rem;
+    box-shadow: 0.5rem 0.5rem;
 }
-
-/*.bestiary-grid {
-    display: grid;
-    width: 20%;
-} */

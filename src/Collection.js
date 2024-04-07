@@ -1,50 +1,48 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
 import "./Style.css";
-import { useLocation, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { getDatabase, ref, set, get, child } from "firebase/database";
+
+const database = getDatabase();
 
 function Collection() {
-  const location = useLocation();
-  const animalData = location.state?.animalData || [];
-  let favorite = null;
-  let maxResult = -Infinity; // Initialize with a very small value
+  const [animalData, setAnimalData] = useState([]);
 
-  for (let x = 0; x < animalData.length; x++) {
-    const currentAnimal = animalData[x];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const snapshot = await get(child(ref(database), 'claimed'));
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const animalsArray = Object.values(data);
+          setAnimalData(animalsArray);
+          console.log("animal data - ", animalData);
+        } else {
+          console.log("No data available");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-    if (currentAnimal.result > maxResult) {
-      favorite = currentAnimal;
-      maxResult = currentAnimal.result;
-    }
-  }
-
-/*  let favorite = animalData[0];
-  for (let x = 0; x < animalData.length; x++) {
-    const currentAnimal = animalData[x];
-
-    if (currentAnimal.result > favorite.result) {
-      favorite = currentAnimal;
-    }
-  }*/
-
+    fetchData();
+  }, []);
 
 
   return (
-    <div>
-      <h1 id="collec-title">Your Bestiary 🦁</h1>
-
-      {/* Check if favorite is not an empty object */}
-      {Object.keys(favorite).length > 0 ? (
-        <div className='placeholder'>
-          <h1 id="animal-name">{favorite != null && favorite.name}</h1>
-          <img id="animal-pic" src={favorite.img}/>
+    <div className="collec">
+    <h1 id="collec-title">Your Bestiary 🦁</h1>
+    <div className='placeholder'>
+      {animalData.map((animal, index) => (
+        <div key={index}>
+          <h2 id="animal-name">{animal.name}</h2>
+          <img id="animal-pic" src={animal.img} alt={animal.name} />
         </div>
-      ) : (
-        <p>No animals found.</p>
-      )}
-
-      <Link to="/">
-        <button id="collec-home">Go Back Home</button>
-      </Link>
+      ))}
+    </div>
+    <Link to="/">
+      <button id="collec-home">Go Back Home</button>
+    </Link>
     </div>
   );
 }

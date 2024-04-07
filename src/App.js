@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from "react";
-import Collection from "./Collection";
 import AnimalProfile from "./AnimalProfile";
 import { useNavigate } from 'react-router-dom';
-import "./Style.css";
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getDatabase, ref, set, get, child, push } from "firebase/database";
+import "./Style.css";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyANjqQtZm7hPqmHl1ilgApWDRkRRqf5S-0",
   authDomain: "animal-snipet.firebaseapp.com",
@@ -21,90 +16,104 @@ const firebaseConfig = {
   measurementId: "G-69WQ6RGC1L"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-const TIME_REMAINING = 15;
+const database = getDatabase();
+const TIME_REMAINING = 10;
 
-const animalData = [
-  {
-    name: "basking shark",
-    img: "https://th.bing.com/th/id/R.db6acb92804f7d7e0a645ca7d3dddbc2?rik=zOVzXpWAq6HNHg&riu=http%3a%2f%2fanimalsadda.com%2fwp-content%2fuploads%2f2013%2f11%2fBasking-Shark-3.jpg&ehk=UJTo17LUZLuEINcA23wi7Qrfn%2bEv%2bDC9NpghytAD33U%3d&risl=&pid=ImgRaw&r=0",
-    result: 0
-  },
-  {
-    name: "whale shark",
-    img: "https://www.thoughtco.com/thmb/o3_yk19FVHEzfbNlIroah5ZqZjs=/4632x3088/filters:no_upscale():max_bytes(150000):strip_icc()/whale-shark-514475851-e56169bf49fb41a49f3b30068f806789.jpg",
-    result: 0
-  },
-  {
-    name: "rhino",
-    img: "https://th.bing.com/th/id/OIP.Kw6EzySU7iAc6sue1y0DKgHaEK?rs=1&pid=ImgDetMain",
-    result: 0
-  },
-  {
-    name: "asian elephant",
-    img: "https://www.thoughtco.com/thmb/q4t3OQkJIwiyTHnV4Pve34f4Ygo%3D/2250x1500/filters:fill(auto%2C1)/167003501-56a0089e5f9b58eba4ae8f93.jpg",
-    result: 0
-  },
-];
 function App() {
-
-  const [topIndex, setTopIndex] = useState(0);
-  const [bottomIndex, setBottomIndex] = useState(1);
-  const [animalCount, setAnimalCount] = useState(0);
+  const [animalData, setAnimalData] = useState([]);
+  const [topIndex, setTopIndex] = useState(Math.floor(Math.random() * animalData.length));
+  const [bottomIndex, setBottomIndex] = useState(Math.floor(Math.random() * animalData.length));
   const [timeRemaining, setTimeRemaining] = useState(TIME_REMAINING);
   const navigate = useNavigate();
+  const [match, setMatch] = useState(false);
 
- useEffect(() => {
-  let timer;
+  useEffect(() => {
+    let timer;
 
-  if (timeRemaining > 0) {
-    timer = setInterval(() => {
-      setTimeRemaining(prevTime => prevTime - 1);
-    }, 1000);
-  } else {
-    navigate('/collection', { state: { animalData } });
-  }
+    const fetchData = async () => {
+      try {
+        const snapshot = await get(child(ref(database), 'unclaimed'));
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const animalsArray = Object.values(data);
+          setAnimalData(animalsArray);
+          console.log(animalData);
+        } else {
+          console.log("No data available");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-  return () => clearInterval(timer);
-}, [timeRemaining, navigate]);
+    fetchData();
+
+    if (timeRemaining > 0) {
+      timer = setInterval(() => {
+        setTimeRemaining(prevTime => prevTime - 1);
+      }, 1000);
+    } else {
+      navigate('/collection', { state: { animalData } });
+    }
+
+    return () => clearInterval(timer);
+  }, [timeRemaining, navigate]);
+
+  const getNextIndex = () => {
+    let newIndex;
+    newIndex = Math.floor(Math.random() * animalData.length);
+    return newIndex;
+  };
+
+  const voteBottom = () => {
+    const newTopIndex = getNextIndex();
+    setTopIndex(newTopIndex);
   
+    if (newTopIndex === bottomIndex) {
+      setMatch(true);
+  
+      const claimedRef = ref(database, "/claimed");
+      const newClaimedRef = push(claimedRef);
+      set(newClaimedRef, {
+        name: animalData[bottomIndex].name,
+        img: animalData[bottomIndex].img,
+        // Add other properties you want to include
+      });
+    } else {
+      setMatch(false);
+    }
+  };
+  
+  const voteTop = () => {
+    const newBottomIndex = getNextIndex();
+    setBottomIndex(newBottomIndex);
+  
+    if (topIndex === newBottomIndex) {
+      setMatch(true);
+  
+      const claimedRef = ref(database, "/claimed");
+      const newClaimedRef = push(claimedRef);
+      set(newClaimedRef, {
+        name: animalData[topIndex].name,
+        img: animalData[topIndex].img,
+        // Add other properties you want to include
+      });
+    } else {
+      setMatch(false);
+    }
+  };
+
+
   const topAnimal = animalData[topIndex] || {};
   const bottomAnimal = animalData[bottomIndex] || {};
 
-  const voteTop = () => {
-    setBottomIndex((prevBottomIndex) => {
-      let newBottomIndex = (prevBottomIndex + 1) % animalData.length;
-      while (newBottomIndex === topIndex) {
-        newBottomIndex = (newBottomIndex + 1) % animalData.length;
-      }
-      return newBottomIndex;
-    });
-   // setAnimalCount((prevCount) => prevCount + 1);
-   console.log(animalData[topIndex]);
-    animalData[topIndex].result++;
-    console.log(animalData[topIndex]);
-  };
-  
-  const voteBottom = () => {
-    setTopIndex((prevTopIndex) => {
-      let newTopIndex = (prevTopIndex + 1) % animalData.length;
-      while (newTopIndex === bottomIndex) {
-        newTopIndex = (newTopIndex + 1) % animalData.length;
-      }
-      return newTopIndex;
-    });
-    //setAnimalCount((prevCount) => prevCount + 1);
-    animalData[bottomIndex].result++;
-    console.log(animalData[bottomIndex].result);
-  };
-
   return (
     <div className="App">
-      <AnimalProfile img={topAnimal.img} name={topAnimal.name} />
-      <AnimalProfile img={bottomAnimal.img} name={bottomAnimal.name} /> 
-      <h1 id="animalCounter">{animalCount}</h1>
+      <AnimalProfile img={topAnimal.img} name={topAnimal.name} isSame={match} />
+      <AnimalProfile img={bottomAnimal.img} name={bottomAnimal.name} isSame={match}  />
+      <h1 id="animalCounter">{animalData.length}</h1>
       <div id="buttonHolder">
         <button id="btnLeft" className="button" onClick={voteTop}>
           Change Bottom
