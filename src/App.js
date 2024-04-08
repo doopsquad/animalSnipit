@@ -59,7 +59,7 @@ function App() {
     }
 
     return () => clearInterval(timer);
-  }, [timeRemaining, navigate]);
+  }, [timeRemaining, navigate, animalData]);
 
   const getNextIndex = () => {
     let newIndex;
