@@ -5,6 +5,7 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getDatabase, ref, set, get, child, push } from "firebase/database";
 import "./Style.css";
+import { v4 as uuidv4 } from 'uuid';
 
 const firebaseConfig = {
   apiKey: "AIzaSyANjqQtZm7hPqmHl1ilgApWDRkRRqf5S-0",
@@ -16,22 +17,23 @@ const firebaseConfig = {
   measurementId: "G-69WQ6RGC1L"
 };
 
+
+
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-const database = getDatabase();
-const TIME_REMAINING = 10;
+const database = getDatabase(app);
+const TIME_REMAINING = 20;
 
 function App() {
   const [animalData, setAnimalData] = useState([]);
-  const [topIndex, setTopIndex] = useState(Math.floor(Math.random() * animalData.length));
-  const [bottomIndex, setBottomIndex] = useState(Math.floor(Math.random() * animalData.length));
+  const [topIndex, setTopIndex] = useState(0);
+  const [bottomIndex, setBottomIndex] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(TIME_REMAINING);
   const navigate = useNavigate();
   const [match, setMatch] = useState(false);
+  const [newUserId, setNewUserId] = useState(null);
 
   useEffect(() => {
-    let timer;
-
     const fetchData = async () => {
       try {
         const snapshot = await get(child(ref(database), 'unclaimed'));
@@ -39,7 +41,6 @@ function App() {
           const data = snapshot.val();
           const animalsArray = Object.values(data);
           setAnimalData(animalsArray);
-          console.log(animalData);
         } else {
           console.log("No data available");
         }
@@ -47,19 +48,27 @@ function App() {
         console.error(error);
       }
     };
-
     fetchData();
+  }, [animalData]);
 
+  useEffect(() => {
+    let timer;
     if (timeRemaining > 0) {
       timer = setInterval(() => {
         setTimeRemaining(prevTime => prevTime - 1);
       }, 1000);
     } else {
-      navigate('/collection', { state: { animalData } });
+      navigate('/collection', {
+        state: {
+          animalData,
+          userId: newUserId // Pass the newUserId state variable
+        }
+      });
     }
-
-    return () => clearInterval(timer);
-  }, [timeRemaining, navigate, animalData]);
+    return () => {
+      clearInterval(timer);
+    };
+  }, [timeRemaining, navigate, newUserId]);
 
   const getNextIndex = () => {
     let newIndex;
@@ -70,17 +79,18 @@ function App() {
   const voteBottom = () => {
     const newTopIndex = getNextIndex();
     setTopIndex(newTopIndex);
-  
     if (newTopIndex === bottomIndex) {
       setMatch(true);
-  
-      const claimedRef = ref(database, "/claimed");
-      const newClaimedRef = push(claimedRef);
-      set(newClaimedRef, {
-        name: animalData[bottomIndex].name,
-        img: animalData[bottomIndex].img,
-        // Add other properties you want to include
-      });
+      if (!newUserId) {
+        const userId = uuidv4(); // Generate a new user ID using uuidv4
+        setNewUserId(userId); // Update the newUserId state variable
+        localStorage.setItem("userId", userId); // Store userId in localStorage
+        const usersRef = ref(database, `/users/${userId}`);
+        set(usersRef, {
+          name: animalData[bottomIndex].name,
+          img: animalData[bottomIndex].img,
+        });
+      }
     } else {
       setMatch(false);
     }
@@ -89,22 +99,22 @@ function App() {
   const voteTop = () => {
     const newBottomIndex = getNextIndex();
     setBottomIndex(newBottomIndex);
-  
     if (topIndex === newBottomIndex) {
       setMatch(true);
-  
-      const claimedRef = ref(database, "/claimed");
-      const newClaimedRef = push(claimedRef);
-      set(newClaimedRef, {
-        name: animalData[topIndex].name,
-        img: animalData[topIndex].img,
-        // Add other properties you want to include
-      });
+      if (!newUserId) {
+        const userId = uuidv4(); // Generate a new user ID using uuidv4
+        setNewUserId(userId); // Update the newUserId state variable
+        localStorage.setItem("userId", userId); // Store userId in localStorage
+        const usersRef = ref(database, `/users/${userId}`);
+        set(usersRef, {
+          name: animalData[topIndex].name,
+          img: animalData[topIndex].img,
+        });
+      }
     } else {
       setMatch(false);
     }
   };
-
 
   const topAnimal = animalData[topIndex] || {};
   const bottomAnimal = animalData[bottomIndex] || {};
@@ -112,7 +122,7 @@ function App() {
   return (
     <div className="App">
       <AnimalProfile img={topAnimal.img} name={topAnimal.name} isSame={match} />
-      <AnimalProfile img={bottomAnimal.img} name={bottomAnimal.name} isSame={match}  />
+      <AnimalProfile img={bottomAnimal.img} name={bottomAnimal.name} isSame={match} />
       <h1 id="animalCounter">{animalData.length}</h1>
       <div id="buttonHolder">
         <button id="btnLeft" className="button" onClick={voteTop}>
