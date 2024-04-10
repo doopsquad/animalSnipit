@@ -22,7 +22,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const database = getDatabase(app);
-const TIME_REMAINING = 20;
+const TIME_REMAINING = 10;
 
 function App() {
   const [animalData, setAnimalData] = useState([]);
@@ -76,21 +76,25 @@ function App() {
     return newIndex;
   };
 
+  const generateUserId = () => {
+    if (!newUserId) {
+      const userId = uuidv4(); // Generate a new user ID using uuidv4
+      setNewUserId(userId); // Update the newUserId state variable
+      localStorage.setItem("userId", userId); // Store userId in localStorage
+    }
+  };
+  
   const voteBottom = () => {
     const newTopIndex = getNextIndex();
     setTopIndex(newTopIndex);
     if (newTopIndex === bottomIndex) {
       setMatch(true);
-      if (!newUserId) {
-        const userId = uuidv4(); // Generate a new user ID using uuidv4
-        setNewUserId(userId); // Update the newUserId state variable
-        localStorage.setItem("userId", userId); // Store userId in localStorage
-        const usersRef = ref(database, `/users/${userId}`);
-        set(usersRef, {
-          name: animalData[bottomIndex].name,
-          img: animalData[bottomIndex].img,
-        });
-      }
+      generateUserId(); // Generate user ID if not already generated
+      const usersRef = ref(database, `/users/${newUserId}`);
+      push(usersRef, {
+        name: animalData[bottomIndex].name,
+        img: animalData[bottomIndex].img,
+      });
     } else {
       setMatch(false);
     }
@@ -101,21 +105,16 @@ function App() {
     setBottomIndex(newBottomIndex);
     if (topIndex === newBottomIndex) {
       setMatch(true);
-      if (!newUserId) {
-        const userId = uuidv4(); // Generate a new user ID using uuidv4
-        setNewUserId(userId); // Update the newUserId state variable
-        localStorage.setItem("userId", userId); // Store userId in localStorage
-        const usersRef = ref(database, `/users/${userId}`);
-        set(usersRef, {
-          name: animalData[topIndex].name,
-          img: animalData[topIndex].img,
-        });
-      }
+      generateUserId(); // Generate user ID if not already generated
+      const usersRef = ref(database, `/users/${newUserId}`);
+      push(usersRef, {
+        name: animalData[topIndex].name,
+        img: animalData[topIndex].img,
+      });
     } else {
       setMatch(false);
     }
   };
-
   const topAnimal = animalData[topIndex] || {};
   const bottomAnimal = animalData[bottomIndex] || {};
 

@@ -91,7 +91,7 @@ html, body {
 
 @media only screen and (max-width: 480px) {
     #img {
-        height: 38vh;
+        height: 35vh;
     }
 
     #time-limit {
