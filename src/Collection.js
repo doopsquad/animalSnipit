@@ -1,34 +1,32 @@
 import React, { useState, useEffect } from "react";
 import "./Style.css";
 import { Link } from 'react-router-dom';
-import { getDatabase, ref, get } from "firebase/database";
+import { getDatabase, ref, onValue } from "firebase/database";
 
 function Collection() {
   const [animalData, setAnimalData] = useState({});
   const userId = localStorage.getItem("userId");
 
-  console.log("userId:", userId);
-
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = () => {
       try {
         const db = getDatabase();
-        console.log("Fetching data for userId:", userId); // Log the userId
-        const snapshot = await get(ref(db, `/users/${userId}`));
-        console.log("Snapshot:", snapshot.val()); // Log the snapshot value
-        if (snapshot.exists()) {
-          const data = snapshot.val();
-          setAnimalData(data);
-          console.log("animalData:", data);
-        } else {
-          console.log("No data available");
-        }
+        const userRef = ref(db, `/users/${userId}`);
+
+        onValue(userRef, (snapshot) => {
+          if (snapshot.exists()) {
+            const data = snapshot.val();
+            setAnimalData(data);
+          } else {
+            setAnimalData({});
+          }
+        });
       } catch (error) {
-        console.error("Error fetching data:", error); // Log any errors
+        console.error("Error fetching data:", error);
       }
     };
-  
-    if (userId) {
+
+    if (userId) { 
       fetchData();
     }
   }, [userId]);

@@ -17,8 +17,6 @@ const firebaseConfig = {
   measurementId: "G-69WQ6RGC1L"
 };
 
-
-
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const database = getDatabase(app);
@@ -76,20 +74,35 @@ function App() {
     return newIndex;
   };
 
-  const generateUserId = () => {
+  /*const generateUserId = () => {
     if (!newUserId) {
       const userId = uuidv4(); // Generate a new user ID using uuidv4
       setNewUserId(userId); // Update the newUserId state variable
       localStorage.setItem("userId", userId); // Store userId in localStorage
     }
+  };*/
+
+  const generateUserId = () => {
+    if (!localStorage.getItem("userId")) {
+      const userId = uuidv4();
+      localStorage.setItem("userId", userId);
+    }
   };
+
+  useEffect(() => {
+    generateUserId();
+  }, []);
   
-  const voteBottom = () => {
+  /*const voteBottom = () => {
     const newTopIndex = getNextIndex();
     setTopIndex(newTopIndex);
     if (newTopIndex === bottomIndex) {
       setMatch(true);
-      generateUserId(); // Generate user ID if not already generated
+      if (!newUserId) {
+        const userId = uuidv4();
+        setNewUserId(userId);
+        localStorage.setItem("userId", userId);
+      }
       const usersRef = ref(database, `/users/${newUserId}`);
       push(usersRef, {
         name: animalData[bottomIndex].name,
@@ -105,7 +118,11 @@ function App() {
     setBottomIndex(newBottomIndex);
     if (topIndex === newBottomIndex) {
       setMatch(true);
-      generateUserId(); // Generate user ID if not already generated
+      if (!newUserId) {
+        const userId = uuidv4();
+        setNewUserId(userId);
+        localStorage.setItem("userId", userId);
+      }
       const usersRef = ref(database, `/users/${newUserId}`);
       push(usersRef, {
         name: animalData[topIndex].name,
@@ -114,7 +131,40 @@ function App() {
     } else {
       setMatch(false);
     }
+  };*/
+
+  const voteBottom = () => {
+    const newTopIndex = getNextIndex();
+    setTopIndex(newTopIndex);
+    if (newTopIndex === bottomIndex) {
+      setMatch(true);
+      const userId = localStorage.getItem("userId");
+      const usersRef = ref(database, `/users/${userId}`);
+      push(usersRef, {
+        name: animalData[bottomIndex].name,
+        img: animalData[bottomIndex].img,
+      });
+    } else {
+      setMatch(false);
+    }
   };
+  
+  const voteTop = () => {
+    const newBottomIndex = getNextIndex();
+    setBottomIndex(newBottomIndex);
+    if (topIndex === newBottomIndex) {
+      setMatch(true);
+      const userId = localStorage.getItem("userId");
+      const usersRef = ref(database, `/users/${userId}`);
+      push(usersRef, {
+        name: animalData[topIndex].name,
+        img: animalData[topIndex].img,
+      });
+    } else {
+      setMatch(false);
+    }
+  };
+
   const topAnimal = animalData[topIndex] || {};
   const bottomAnimal = animalData[bottomIndex] || {};
 

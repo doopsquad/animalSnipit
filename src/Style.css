@@ -90,6 +90,12 @@ html, body {
 }
 
 @media only screen and (max-width: 480px) {
+    #time-limit {
+        margin: 0; 
+    }
+}
+
+@media only screen and (max-width: 480px) {
     #img {
         height: 35vh;
     }
@@ -105,6 +111,12 @@ html, body {
     text-align: center;
     color: white;
     margin-top: 40vh; 
+}
+
+@media only screen and (max-width: 480px) {
+    .home-page {
+    margin-top: 20vh;
+    }
 }
 
 #home-title {
@@ -144,6 +156,12 @@ html, body {
     text-align: center;
     color: white;
     font-size: 3rem;
+}
+
+@media only screen and (max-width: 480px) {
+    #collect-title {
+    margin-top: 15vh;
+    }
 }
 
 #animal-name {
