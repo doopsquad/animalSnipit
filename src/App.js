@@ -20,13 +20,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const database = getDatabase(app);
-const TIME_REMAINING = 10;
+const TIME_REMAINING = 20;
 
 function App() {
   const [animalData, setAnimalData] = useState([]);
-  const [topIndex, setTopIndex] = useState(0);
-  const [bottomIndex, setBottomIndex] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(TIME_REMAINING);
+  const [topIndex, setTopIndex] = useState(null);
+  const [bottomIndex, setBottomIndex] = useState(null);
   const navigate = useNavigate();
   const [match, setMatch] = useState(false);
   const [newUserId, setNewUserId] = useState(null);
@@ -39,6 +39,10 @@ function App() {
           const data = snapshot.val();
           const animalsArray = Object.values(data);
           setAnimalData(animalsArray);
+          const initialTopIndex = Math.floor(Math.random() * animalsArray.length);
+          const initialBottomIndex = Math.floor(Math.random() * animalsArray.length);
+          setTopIndex(initialTopIndex);
+          setBottomIndex(initialBottomIndex);
         } else {
           console.log("No data available");
         }
@@ -46,7 +50,8 @@ function App() {
         console.error(error);
       }
     };
-    fetchData();
+    if (!animalData.length) {
+    fetchData(); }
   }, [animalData]);
 
   useEffect(() => {
@@ -74,14 +79,6 @@ function App() {
     return newIndex;
   };
 
-  /*const generateUserId = () => {
-    if (!newUserId) {
-      const userId = uuidv4(); // Generate a new user ID using uuidv4
-      setNewUserId(userId); // Update the newUserId state variable
-      localStorage.setItem("userId", userId); // Store userId in localStorage
-    }
-  };*/
-
   const generateUserId = () => {
     if (!localStorage.getItem("userId")) {
       const userId = uuidv4();
@@ -93,45 +90,7 @@ function App() {
     generateUserId();
   }, []);
   
-  /*const voteBottom = () => {
-    const newTopIndex = getNextIndex();
-    setTopIndex(newTopIndex);
-    if (newTopIndex === bottomIndex) {
-      setMatch(true);
-      if (!newUserId) {
-        const userId = uuidv4();
-        setNewUserId(userId);
-        localStorage.setItem("userId", userId);
-      }
-      const usersRef = ref(database, `/users/${newUserId}`);
-      push(usersRef, {
-        name: animalData[bottomIndex].name,
-        img: animalData[bottomIndex].img,
-      });
-    } else {
-      setMatch(false);
-    }
-  };
-  
-  const voteTop = () => {
-    const newBottomIndex = getNextIndex();
-    setBottomIndex(newBottomIndex);
-    if (topIndex === newBottomIndex) {
-      setMatch(true);
-      if (!newUserId) {
-        const userId = uuidv4();
-        setNewUserId(userId);
-        localStorage.setItem("userId", userId);
-      }
-      const usersRef = ref(database, `/users/${newUserId}`);
-      push(usersRef, {
-        name: animalData[topIndex].name,
-        img: animalData[topIndex].img,
-      });
-    } else {
-      setMatch(false);
-    }
-  };*/
+
 
   const voteBottom = () => {
     const newTopIndex = getNextIndex();

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import "./Style.css";
 import { Link } from 'react-router-dom';
 import { getDatabase, ref, onValue } from "firebase/database";
 
 function Collection() {
-  const [animalData, setAnimalData] = useState({});
+  const [animalData, setAnimalData] = useState([]);
   const userId = localStorage.getItem("userId");
 
   useEffect(() => {
@@ -16,9 +15,11 @@ function Collection() {
         onValue(userRef, (snapshot) => {
           if (snapshot.exists()) {
             const data = snapshot.val();
-            setAnimalData(data);
+            // Convert the object of animals to an array
+            const animalsArray = Object.values(data);
+            setAnimalData(animalsArray);
           } else {
-            setAnimalData({});
+            setAnimalData([]);
           }
         });
       } catch (error) {
@@ -31,14 +32,31 @@ function Collection() {
     }
   }, [userId]);
 
+  // Function to filter out duplicates based on animal name
+  const getUniqueAnimals = (animals) => {
+    const uniqueAnimals = [];
+    const animalNames = new Set(); // Set to store unique animal names
+
+    animals.forEach(animal => {
+      if (!animalNames.has(animal.name)) {
+        uniqueAnimals.push(animal);
+        animalNames.add(animal.name);
+      }
+    });
+
+    return uniqueAnimals;
+  };
+
+  const uniqueAnimalData = getUniqueAnimals(animalData);
+
   return (
     <div className="collec">
       <h1 id="collec-title">Your Bestiary 🦁</h1>
       <div className='placeholder'>
-        {Object.entries(animalData).map(([animalKey, animalValue]) => (
-          <div key={animalKey}>
-            <h2 id="animal-name">{animalValue.name}</h2>
-            <img id="animal-pic" src={animalValue.img} alt={animalValue.name} />
+        {uniqueAnimalData.map((animal, index) => (
+          <div key={index}>
+            <h2 id="animal-name">{animal.name}</h2>
+            <img id="animal-pic" src={animal.img} alt={animal.name} />
           </div>
         ))}
       </div>

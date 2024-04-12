@@ -1,9 +1,7 @@
 /*
 Goals for 4/11:
-Make it so that the player's animals are saved from the previous game and show up in the next game's bestiary (major)
+
 Add a few more animals (minor)
-Take animals out of the game if user already caught (major)
-Change first two animals (major)
 
 */
 
