@@ -61,7 +61,10 @@ function Collection() {
         ))}
       </div>
       <Link to="/">
-        <button id="collec-home">Go Back Home</button>
+        <button id="collec-home" className="collec-btn">Go Back Home</button>
+      </Link>
+      <Link to="/feed">
+        <button id="collec-feed" className="collec-btn">Go to Feed</button>
       </Link>
     </div>
   );

@@ -103,6 +103,12 @@ function App() {
         name: animalData[bottomIndex].name,
         img: animalData[bottomIndex].img,
       });
+      const matchedAnimalsRef = ref(database, 'matchedAnimals');
+      push(matchedAnimalsRef, {
+        name: animalData[topIndex].name,
+        img: animalData[topIndex].img,
+        userId: userId,
+      });
     } else {
       setMatch(false);
     }
@@ -118,6 +124,12 @@ function App() {
       push(usersRef, {
         name: animalData[topIndex].name,
         img: animalData[topIndex].img,
+      });
+      const matchedAnimalsRef = ref(database, 'matchedAnimals');
+      push(matchedAnimalsRef, {
+        name: animalData[topIndex].name,
+        img: animalData[topIndex].img,
+        userId: userId,
       });
     } else {
       setMatch(false);

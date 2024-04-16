@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import Home from './Home';
 import Collection from './Collection';
+import SocialFeed from './SocialFeed';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
   {
     path: "/collection",
     element: <Collection/>
+  },
+  {
+    path: "/feed",
+    element: <SocialFeed/>
   }
 ]);
 

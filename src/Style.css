@@ -177,7 +177,7 @@ html, body {
     text-align: center;
 }
 
-#collec-home {
+.collec-btn {
     display: block;
     z-index: 100;
     margin: 0 auto;
@@ -190,4 +190,44 @@ html, body {
     font-size: 2rem;
     border-radius: 0.3125rem;
     box-shadow: 0.5rem 0.5rem;
+}
+
+/* Feed Page */
+
+#feed-title {
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    font-size: 5rem;
+}
+
+#feed-info {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+#animal-name {
+    font-size: 1.5rem;
+}
+
+#match-info {
+    font-size: 2rem;
+}
+
+.feed-btn {
+        display: block;
+        z-index: 100;
+        margin: 0 auto;
+        position: relative;
+        margin-bottom: 5vh;
+        padding: 0.5rem 1.5rem;
+        color: black;
+        background-color: white;
+        font-weight: bold;
+        font-size: 2rem;
+        border-radius: 0.3125rem;
+        box-shadow: 0.5rem 0.5rem;
 }

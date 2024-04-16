@@ -13,6 +13,9 @@ function Home() {
       <Link to="/collection">
         <button id="home-beastiary" className='home-button'>Bestiary</button>
       </Link>
+      <Link to="/feed">
+        <button id="home-feed" className='home-button'>Feed</button>
+      </Link>
       </div>
     </div>
   )
