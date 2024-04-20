@@ -19,12 +19,12 @@ function SocialFeed() {
   }, []);
 
   return (
-    <div>
+    <div className='feed'>
       <h2 id="feed-title">Social Feed</h2>
       {matchedAnimals.map((animal, index) => (
         <div id="feed-info" key={index}>
-          <img src={animal.img} alt={animal.name} />
-          <p id="animal-name">{animal.name}</p>
+          <img id="feed-pic"src={animal.img} alt={animal.name} />
+          <p id="animal-name-feed">{animal.name}</p>
           <p id="match-info">Matched by: {animal.userId}</p>
         </div>
       ))}

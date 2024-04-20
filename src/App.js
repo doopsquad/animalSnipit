@@ -139,16 +139,32 @@ function App() {
   const topAnimal = animalData[topIndex] || {};
   const bottomAnimal = animalData[bottomIndex] || {};
 
+  useEffect(() => {
+    let timer;
+    if (match) {
+      timer = setTimeout(() => {
+        setMatch(false);
+        const newTopIndex = getNextIndex();
+        const newBottomIndex = getNextIndex();
+        setTopIndex(newTopIndex);
+        setBottomIndex(newBottomIndex);
+      }, 1000); // Adjust the duration based on your animation length
+    }
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [match]);
+
   return (
     <div className="App">
       <AnimalProfile img={topAnimal.img} name={topAnimal.name} isSame={match} />
       <AnimalProfile img={bottomAnimal.img} name={bottomAnimal.name} isSame={match} />
       <h1 id="animalCounter">{animalData.length}</h1>
       <div id="buttonHolder">
-        <button id="btnLeft" className="button" onClick={voteTop}>
+        <button id="btnLeft" className="button" onClick={voteTop} style={{ display: match ? 'none' : 'inline-block' }}>
           Change Bottom
         </button>
-        <button id="btnRight" className="button" onClick={voteBottom}>
+        <button id="btnRight" className="button" onClick={voteBottom} style={{ display: match ? 'none' : 'inline-block' }}>
           Change Top
         </button>
       </div>

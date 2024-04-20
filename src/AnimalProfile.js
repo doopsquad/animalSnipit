@@ -1,7 +1,11 @@
 /*
-Goals for 4/11:
+Goals for 
 
-Add a few more animals (minor)
+
+Find out how to utilize cookies for user's usernames
+Instead of randomass numbers for user ids, let users make usernames
+sometimes pictures arent loading
+
 
 */
 

@@ -48,7 +48,8 @@ html, body {
   }
   
   .animal-profile.bulge {
-    animation: bulge 0.5s ease-in-out infinite, flash 0.5s ease-in-out infinite;
+    animation: bulge 0.5s ease-in-out, flash 0.5s ease-in-out;
+
   }
 
 #img {
@@ -70,6 +71,7 @@ html, body {
     padding: .5rem;
     font-size: 1rem;
     margin: 1rem 1rem;
+    cursor: pointer;
 }
 
 #buttonHolder {
@@ -132,6 +134,7 @@ html, body {
     margin-bottom: 5vh;
     color: black;
     background-color: white;
+    cursor: pointer;
 }
 
 .home-buttons {
@@ -146,36 +149,58 @@ html, body {
     #collec-home {
         margin: 0;
     }
+
+    #collect-title {
+        margin-top: 15vh;
+    }
+
 }
 
 .collec {
-    height: fit-content;
-}
-
-#collec-title {
     text-align: center;
     color: white;
-    font-size: 3rem;
-}
-
-@media only screen and (max-width: 480px) {
-    #collect-title {
-    margin-top: 15vh;
-    }
-}
-
-#animal-name {
-    color: white;
-}
-
-#animal-pic {
-    height: 85%;
-    width: 30%;
-}
-
-.placeholder {
+  }
+  
+  #collec-title {
+    font-size: 4rem;
+    margin-bottom: 20px;
+  }
+  
+  .animal-card {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 20px;
+    justify-items: center;
+  }
+  
+  .animal-card > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-}
+    width: 100%;
+  }
+  
+  #animal-pic {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  #animal-name-collec {
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+.collec-btn-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+  }
 
 .collec-btn {
     display: block;
@@ -190,32 +215,46 @@ html, body {
     font-size: 2rem;
     border-radius: 0.3125rem;
     box-shadow: 0.5rem 0.5rem;
+    cursor: pointer;
 }
 
 /* Feed Page */
+.feed {
+    color: white;
+}
 
 #feed-title {
+    font-size: 24px;
+    margin-bottom: 20px;
     text-align: center;
-    color: white;
-    font-weight: bold;
-    font-size: 5rem;
-}
-
-#feed-info {
-    display: flex;
-    flex-flow: column;
-    justify-content: center;
+  }
+  
+  #feed-info {
+    display: grid;
+    grid-template-columns: 100px 1fr 1fr;
     align-items: center;
-    color: white;
-}
-
-#animal-name {
-    font-size: 1.5rem;
-}
-
-#match-info {
-    font-size: 2rem;
-}
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 8px; 
+  }
+  
+  #feed-pic {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  #animal-name-feed {
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 20px;
+  }
+  
+  #match-info {
+    font-size: 14px;
+    text-align: right;
+  } 
 
 .feed-btn {
         display: block;
@@ -230,4 +269,5 @@ html, body {
         font-size: 2rem;
         border-radius: 0.3125rem;
         box-shadow: 0.5rem 0.5rem;
-}
+        cursor: pointer;
+    }

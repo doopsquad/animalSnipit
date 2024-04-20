@@ -52,20 +52,22 @@ function Collection() {
   return (
     <div className="collec">
       <h1 id="collec-title">Your Bestiary 🦁</h1>
-      <div className='placeholder'>
+      <div className='animal-card'>
         {uniqueAnimalData.map((animal, index) => (
           <div key={index}>
-            <h2 id="animal-name">{animal.name}</h2>
+            <h2 id="animal-name-collec">{animal.name}</h2>
             <img id="animal-pic" src={animal.img} alt={animal.name} />
           </div>
         ))}
       </div>
+      <div className="collec-btn-container">
       <Link to="/">
-        <button id="collec-home" className="collec-btn">Go Back Home</button>
+        <button className="collec-btn">Go Back Home</button>
       </Link>
       <Link to="/feed">
-        <button id="collec-feed" className="collec-btn">Go to Feed</button>
+        <button className="collec-btn">Go to Feed</button>
       </Link>
+      </div>
     </div>
   );
 }
