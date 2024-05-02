@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 function Home() {
   return (
     <div className='home-page'>
-      <h1 id="home-title">Animal Snipit🫎</h1>
+      <h1 id="home-title">Safar🫎</h1>
       <div className='home-buttons'>
       <Link to="/app">
         <button id="home-easy" className='home-button'>Start</button>

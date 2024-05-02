@@ -165,7 +165,6 @@ html, body {
     font-size: 4rem;
     margin-bottom: 20px;
   }
-  
   .animal-card {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

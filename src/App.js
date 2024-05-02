@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, } from "react";
+import { debounce } from 'lodash';
 import AnimalProfile from "./AnimalProfile";
 import { useNavigate } from 'react-router-dom';
 import { initializeApp } from "firebase/app";
@@ -31,10 +32,24 @@ function App() {
   const [match, setMatch] = useState(false);
   const [newUserId, setNewUserId] = useState(null);
 
+
+  let userId;
+  const generateUserId = () => {
+    if (!localStorage.getItem("userId")) {
+       userId = uuidv4();
+      localStorage.setItem("userId", userId);
+    }
+  };
+
+  useEffect(() => {
+    generateUserId();
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const snapshot = await get(child(ref(database), 'unclaimed'));
+        const userSnapshot = await get(child(ref(database), `users/${userId}`));
         if (snapshot.exists()) {
           const data = snapshot.val();
           const animalsArray = Object.values(data);
@@ -51,8 +66,10 @@ function App() {
       }
     };
     if (!animalData.length) {
-    fetchData(); }
+      fetchData();
+    }
   }, [animalData]);
+
 
   useEffect(() => {
     let timer;
@@ -79,20 +96,7 @@ function App() {
     return newIndex;
   };
 
-  const generateUserId = () => {
-    if (!localStorage.getItem("userId")) {
-      const userId = uuidv4();
-      localStorage.setItem("userId", userId);
-    }
-  };
-
-  useEffect(() => {
-    generateUserId();
-  }, []);
-  
-
-
-  const voteBottom = () => {
+  const voteBottom = debounce(() => {
     const newTopIndex = getNextIndex();
     setTopIndex(newTopIndex);
     if (newTopIndex === bottomIndex) {
@@ -105,16 +109,16 @@ function App() {
       });
       const matchedAnimalsRef = ref(database, 'matchedAnimals');
       push(matchedAnimalsRef, {
-        name: animalData[topIndex].name,
-        img: animalData[topIndex].img,
+        name: animalData[bottomIndex].name,
+        img: animalData[bottomIndex].img,
         userId: userId,
       });
     } else {
       setMatch(false);
     }
-  };
+  }, 300); 
   
-  const voteTop = () => {
+  const voteTop = debounce(() => {
     const newBottomIndex = getNextIndex();
     setBottomIndex(newBottomIndex);
     if (topIndex === newBottomIndex) {
@@ -131,10 +135,11 @@ function App() {
         img: animalData[topIndex].img,
         userId: userId,
       });
-    } else {
+      } else {
       setMatch(false);
     }
-  };
+  }, 300);
+
 
   const topAnimal = animalData[topIndex] || {};
   const bottomAnimal = animalData[bottomIndex] || {};

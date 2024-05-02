@@ -4,8 +4,6 @@ Goals for
 
 Find out how to utilize cookies for user's usernames
 Instead of randomass numbers for user ids, let users make usernames
-sometimes pictures arent loading
-
 
 */
 

@@ -12,17 +12,19 @@ function SocialFeed() {
     onValue(matchedAnimalsRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        const animalsArray = Object.values(data);
+        const animalsArray = Object.entries(data).map(([key, value]) => ({
+          id: key,
+          ...value,
+        }));
         setMatchedAnimals(animalsArray);
       }
     });
   }, []);
-
   return (
     <div className='feed'>
       <h2 id="feed-title">Social Feed</h2>
-      {matchedAnimals.map((animal, index) => (
-        <div id="feed-info" key={index}>
+      {matchedAnimals.map((animal) => (
+        <div id="feed-info">
           <img id="feed-pic"src={animal.img} alt={animal.name} />
           <p id="animal-name-feed">{animal.name}</p>
           <p id="match-info">Matched by: {animal.userId}</p>
