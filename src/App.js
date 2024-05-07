@@ -24,14 +24,17 @@ const database = getDatabase(app);
 const TIME_REMAINING = 20;
 
 function App() {
+
+  const getRandIndex = (animalData) => Math.floor(Math.random() * animalData.length);
+  
   const [animalData, setAnimalData] = useState([]);
   const [timeRemaining, setTimeRemaining] = useState(TIME_REMAINING);
-  const [topIndex, setTopIndex] = useState(null);
-  const [bottomIndex, setBottomIndex] = useState(null);
   const navigate = useNavigate();
   const [match, setMatch] = useState(false);
   const [newUserId, setNewUserId] = useState(null);
-
+  const [randIndex1, setRandIndex1] = React.useState(() => getRandIndex(animalData));
+  const [randIndex2, setRandIndex2] = React.useState(() => getRandIndex(animalData));
+  const [matchedAnimals, setMatchedAnimals] = useState([]);
 
   let userId;
   const generateUserId = () => {
@@ -49,15 +52,10 @@ function App() {
     const fetchData = async () => {
       try {
         const snapshot = await get(child(ref(database), 'unclaimed'));
-        const userSnapshot = await get(child(ref(database), `users/${userId}`));
         if (snapshot.exists()) {
           const data = snapshot.val();
           const animalsArray = Object.values(data);
           setAnimalData(animalsArray);
-          const initialTopIndex = Math.floor(Math.random() * animalsArray.length);
-          const initialBottomIndex = Math.floor(Math.random() * animalsArray.length);
-          setTopIndex(initialTopIndex);
-          setBottomIndex(initialBottomIndex);
         } else {
           console.log("No data available");
         }
@@ -90,75 +88,59 @@ function App() {
     };
   }, [timeRemaining, navigate, newUserId]);
 
-  const getNextIndex = () => {
-    let newIndex;
-    newIndex = Math.floor(Math.random() * animalData.length);
-    return newIndex;
-  };
 
-  const voteBottom = debounce(() => {
-    const newTopIndex = getNextIndex();
-    setTopIndex(newTopIndex);
-    if (newTopIndex === bottomIndex) {
-      setMatch(true);
-      const userId = localStorage.getItem("userId");
-      const usersRef = ref(database, `/users/${userId}`);
-      push(usersRef, {
-        name: animalData[bottomIndex].name,
-        img: animalData[bottomIndex].img,
-      });
-      const matchedAnimalsRef = ref(database, 'matchedAnimals');
-      push(matchedAnimalsRef, {
-        name: animalData[bottomIndex].name,
-        img: animalData[bottomIndex].img,
-        userId: userId,
-      });
-    } else {
-      setMatch(false);
-    }
-  }, 300); 
-  
-  const voteTop = debounce(() => {
-    const newBottomIndex = getNextIndex();
-    setBottomIndex(newBottomIndex);
-    if (topIndex === newBottomIndex) {
-      setMatch(true);
-      const userId = localStorage.getItem("userId");
-      const usersRef = ref(database, `/users/${userId}`);
-      push(usersRef, {
-        name: animalData[topIndex].name,
-        img: animalData[topIndex].img,
-      });
-      const matchedAnimalsRef = ref(database, 'matchedAnimals');
-      push(matchedAnimalsRef, {
-        name: animalData[topIndex].name,
-        img: animalData[topIndex].img,
-        userId: userId,
-      });
-      } else {
-      setMatch(false);
-    }
-  }, 300);
+const voteBottom = debounce(() => {
+  setRandIndex1(getRandIndex(animalData));
+})
 
+const voteTop = debounce(() => {
+  setRandIndex2(getRandIndex(animalData));
+})
 
-  const topAnimal = animalData[topIndex] || {};
-  const bottomAnimal = animalData[bottomIndex] || {};
+useEffect(() => {
+  if (animalData.length && randIndex1 === randIndex2) {
+    const matched = animalData[randIndex1];
+    const userId = localStorage.getItem("userId");
+    const usersRef = ref(database, `/users/${userId}`);
+    push(usersRef, {
+      name: animalData[randIndex2].name,
+      img: animalData[randIndex2].img,
+    });
+    const matchedAnimalsRef = ref(database, 'matchedAnimals');
+    push(matchedAnimalsRef, {
+      name: animalData[randIndex2].name,
+      img: animalData[randIndex2].img,
+      userId: userId,
+    });
+    const nextAnimals = animalData.toSpliced(randIndex1, 1);
+    setAnimalData(nextAnimals);
+    setMatchedAnimals((matchedAnimals) => matchedAnimals.concat(matched));
+    setRandIndex1(getRandIndex(nextAnimals));
+    setRandIndex2(getRandIndex(nextAnimals));
+  }
+}, [animalData, randIndex1, randIndex2]);
+
+  const topAnimal = animalData[randIndex1] || {};
+  const bottomAnimal = animalData[randIndex2] || {};
 
   useEffect(() => {
     let timer;
     if (match) {
       timer = setTimeout(() => {
         setMatch(false);
-        const newTopIndex = getNextIndex();
-        const newBottomIndex = getNextIndex();
-        setTopIndex(newTopIndex);
-        setBottomIndex(newBottomIndex);
       }, 1000); // Adjust the duration based on your animation length
     }
     return () => {
       clearTimeout(timer);
     };
   }, [match]);
+
+  const reset = () => {
+    setAnimalData(animalData);
+    setMatchedAnimals([]);
+    setRandIndex1(getRandIndex(animalData));
+    setRandIndex2(getRandIndex(animalData));
+  };
 
   return (
     <div className="App">
@@ -174,6 +156,11 @@ function App() {
         </button>
       </div>
       <h1 id="time-limit">Time Remaining: {timeRemaining}</h1>
+      <div>
+      <button id="btnReset" type="button" onClick={reset}>
+          Reset
+      </button>
+      </div>
     </div>
   );
 }
