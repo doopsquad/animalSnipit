@@ -5,6 +5,7 @@ html, body {
     padding: 0;
     font-size: 16px;
     background-color: #794949;
+    overflow: auto;
   }
 
   a {
@@ -74,9 +75,10 @@ html, body {
     cursor: pointer;
 }
 
-#buttonHolder {
+#buttonHolder, #resetHolder {
     text-align: center;
 }
+
 
 #animalCounter {
     color: white;

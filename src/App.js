@@ -1,4 +1,4 @@
-import React, { useState, useEffect, } from "react";
+import React, { useState, useEffect, Profiler, } from "react";
 import { debounce } from 'lodash';
 import AnimalProfile from "./AnimalProfile";
 import { useNavigate } from 'react-router-dom';
@@ -21,7 +21,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const database = getDatabase(app);
-const TIME_REMAINING = 20;
+const TIME_REMAINING = 200;
 
 function App() {
 
@@ -91,14 +91,17 @@ function App() {
 
 const voteBottom = debounce(() => {
   setRandIndex1(getRandIndex(animalData));
-})
+}, 300);
 
 const voteTop = debounce(() => {
   setRandIndex2(getRandIndex(animalData));
-})
+}, 300);
+
 
 useEffect(() => {
   if (animalData.length && randIndex1 === randIndex2) {
+    setMatch(true);
+    if (match == false) {
     const matched = animalData[randIndex1];
     const userId = localStorage.getItem("userId");
     const usersRef = ref(database, `/users/${userId}`);
@@ -115,8 +118,14 @@ useEffect(() => {
     const nextAnimals = animalData.toSpliced(randIndex1, 1);
     setAnimalData(nextAnimals);
     setMatchedAnimals((matchedAnimals) => matchedAnimals.concat(matched));
-    setRandIndex1(getRandIndex(nextAnimals));
-    setRandIndex2(getRandIndex(nextAnimals));
+    setTimeout(() => {
+      setRandIndex1(getRandIndex(nextAnimals));
+      setRandIndex2(getRandIndex(nextAnimals));
+    }, 1000);
+    }
+  }
+  else {
+    setMatch(false);
   }
 }, [animalData, randIndex1, randIndex2]);
 
@@ -155,12 +164,12 @@ useEffect(() => {
           Change Top
         </button>
       </div>
-      <h1 id="time-limit">Time Remaining: {timeRemaining}</h1>
-      <div>
-      <button id="btnReset" type="button" onClick={reset}>
+      <div id="resetHolder">
+      <button id="btnReset" className="button" type="button" onClick={reset}>
           Reset
       </button>
       </div>
+      <h1 id="time-limit">Time Remaining: {timeRemaining}</h1>
     </div>
   );
 }
